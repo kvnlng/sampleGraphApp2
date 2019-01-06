@@ -1,5 +1,7 @@
-package io.kevinlong.controller;
+package io.kevinlong;
 
+import com.google.gson.Gson;
+import org.eclipse.collections.impl.factory.Lists;
 import org.neo4j.driver.v1.*;
 import org.neo4j.driver.v1.summary.ResultSummary;
 import org.primefaces.PrimeFaces;
@@ -12,6 +14,7 @@ import javax.inject.Named;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static java.util.Collections.singletonMap;
@@ -24,7 +27,11 @@ public class GraphController implements AutoCloseable, Serializable {
     private Driver driver;
     private String actor;
     private String query;
-    private Integer numResults;
+    private String jsonResult;
+
+    Gson gson = new Gson();
+    List<Integer> vals = new ArrayList<>();
+
 
     @Produces
     @Named
@@ -36,6 +43,8 @@ public class GraphController implements AutoCloseable, Serializable {
         String user = "neo4j";
         String password = "hello";
         this.actor = "";
+        vals.add(1); vals.add(2); vals.add(3); vals.add(4); vals.add(5);
+        this.jsonResult = gson.toJson(vals);
 
         coactors = new ArrayList<>();
         driver = GraphDatabase.driver("bolt://localhost", AuthTokens.basic(user, password));
@@ -55,9 +64,11 @@ public class GraphController implements AutoCloseable, Serializable {
                 coactors.add(result.next().get("coactors").asString());
             }
 
-            PrimeFaces.current().ajax().update("searchOut");
+//            PrimeFaces.current().ajax().update("searchOut");
 
         }
+        vals.add(10); vals.add(11); vals.add(12); vals.add(13); vals.add(14);
+        setJsonResult(gson.toJson(vals));
     }
 
     @Override
@@ -86,14 +97,14 @@ public class GraphController implements AutoCloseable, Serializable {
         this.actor = actor;
     }
 
-    public Integer getNumResults() {
+    public String getJsonResult() {
 
-        return numResults;
+        return jsonResult;
     }
 
-    public void setNumResults(Integer numResults) {
+    public void setJsonResult(String jsonResult) {
 
-        this.numResults = numResults;
+        this.jsonResult = jsonResult;
     }
 
 }
