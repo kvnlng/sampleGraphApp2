@@ -129,6 +129,11 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>${version.war.plugin}</version>
                 <configuration>
+                    <webResources>
+                        <resource>
+                            <directory>js</directory>
+                        </resource>
+                    </webResources>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
